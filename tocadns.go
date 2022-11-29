@@ -50,7 +50,9 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				if p.Provider.APIToken != "" {
 					return d.Err("API token already set")
 				}
-				p.Provider.APIToken = d.Val()
+				if d.NextArg() {
+					p.Provider.APIToken = d.Val()
+				}
 				if d.NextArg() {
 					return d.ArgErr()
 				}
@@ -58,7 +60,9 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				if p.Provider.APIHost != "" {
 					return d.Err("API Host already set")
 				}
-				p.Provider.APIHost = d.Val()
+				if d.NextArg() {
+					p.Provider.APIHost = d.Val()
+				}
 				if d.NextArg() {
 					return d.ArgErr()
 				}
