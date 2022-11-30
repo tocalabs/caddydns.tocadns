@@ -43,30 +43,30 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 		}
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
-			case "api_token":
-				if p.Provider.APIToken != "" {
-					return d.Err("API token already set")
-				}
-				if !d.NextArg() {
-					return d.ArgErr()
-				}
-				p.Provider.APIToken = d.Val()
-				if d.NextArg() {
-					return d.ArgErr()
-				}
-			case "api_host":
-				if p.Provider.APIHost != "" {
-					return d.Err("API Host already set")
-				}
-				if !d.NextArg() {
-					return d.ArgErr()
-				}
-				p.Provider.APIHost = d.Val()
-				if d.NextArg() {
-					return d.ArgErr()
-				}
-			default:
-				return d.Errf("unrecognized subdirective '%s'", d.Val())
+				case "api_token":
+					if p.Provider.APIToken != "" {
+						return d.Err("API Token already set")
+					}
+					if !d.NextArg() {
+						return d.ArgErr()
+					}
+					p.Provider.APIToken = d.Val()
+					if d.NextArg() {
+						return d.ArgErr()
+					}
+				case "api_host":
+					if p.Provider.APIHost != "" {
+						return d.Err("API Host already set")
+					}
+					if !d.NextArg() {
+						return d.ArgErr()
+					}
+					p.Provider.APIHost = d.Val()
+					if d.NextArg() {
+						return d.ArgErr()
+					}
+				default:
+					return d.Errf("unrecognized subdirective '%s'", d.Val())
 			}
 		}
 	}
@@ -74,7 +74,7 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 		return d.Err("missing API token")
 	}
 	if p.Provider.APIHost == "" {
-		return d.Err("missing API Host")
+		return d.Err("missing API host")
 	}
 	return nil
 }
