@@ -58,6 +58,9 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 					p.Provider.APIToken = d.Val()
 				}
 				if d.NextArg() {
+					p.Provider.APIToken = d.Val()
+				}
+				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "api_host":
