@@ -34,16 +34,19 @@ func (p *Provider) Provision(ctx caddy.Context) error {
 // TODO: This is just an example. Update accordingly.
 // UnmarshalCaddyfile sets up the DNS provider from Caddyfile tokens. Syntax:
 //
-// tocadns [<api_token>] {
+// tocadns {
 //     api_token <api_token>
+// .   api_host <api_host>
 // }
 //
 // **THIS IS JUST AN EXAMPLE AND NEEDS TO BE CUSTOMIZED.**
 func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
-	fmt.Printf("Unmarshal for tocadns")
 	for d.Next() {
 		if d.NextArg() {
 			p.Provider.APIToken = d.Val()
+		}
+		if d.NextArg() {
+			return d.ArgErr()
 		}
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
@@ -51,21 +54,19 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				if p.Provider.APIToken != "" {
 					return d.Err("API token already set")
 				}
-				if !d.NextArg() {
-					return d.ArgErr()
+				if d.NextArg() {
+					p.Provider.APIToken = d.Val()
 				}
-				p.Provider.APIToken = d.Val()
 				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "api_host":
 				if p.Provider.APIHost != "" {
-					return d.Err("API Host already set")
+					return d.Err("API host already set")
 				}
-				if !d.NextArg() {
-					return d.ArgErr()
+				if d.NextArg() {
+					p.Provider.APIHost = d.Val()
 				}
-				p.Provider.APIToken = d.Val()
 				if d.NextArg() {
 					return d.ArgErr()
 				}
