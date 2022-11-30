@@ -50,9 +50,8 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 					if !d.NextArg() {
 						return d.ArgErr()
 					}
-					p.Provider.APIToken = d.Val()
 					if d.NextArg() {
-						return d.ArgErr()
+						p.Provider.APIToken = d.Val()
 					}
 				case "api_host":
 					if p.Provider.APIHost != "" {
@@ -61,9 +60,8 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 					if !d.NextArg() {
 						return d.ArgErr()
 					}
-					p.Provider.APIHost = d.Val()
 					if d.NextArg() {
-						return d.ArgErr()
+						p.Provider.APIHost = d.Val()
 					}
 				default:
 					return d.Errf("unrecognized subdirective '%s'", d.Val())
