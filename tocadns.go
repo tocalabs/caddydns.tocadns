@@ -40,9 +40,7 @@ func (p *Provider) Provision(ctx caddy.Context) error {
 //	}
 func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
-		if d.NextArg() {
-			return d.ArgErr()
-		}
+		
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			fmt.Printf("Nesting block")
 			switch d.Val() {
