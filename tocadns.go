@@ -42,9 +42,6 @@ func (p *Provider) Provision(ctx caddy.Context) error {
 // **THIS IS JUST AN EXAMPLE AND NEEDS TO BE CUSTOMIZED.**
 func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
-		if d.NextArg() {
-			return d.ArgErr()
-		}
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
 			case "api_token":
