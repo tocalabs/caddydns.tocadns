@@ -47,21 +47,21 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 					if p.Provider.APIToken != "" {
 						return d.Err("API Token already set")
 					}
-					if !d.NextArg() {
-						return d.ArgErr()
-					}
 					if d.NextArg() {
 						p.Provider.APIToken = d.Val()
+					}
+					if d.NextArg() {
+						return d.ArgErr()
 					}
 				case "api_host":
 					if p.Provider.APIHost != "" {
 						return d.Err("API Host already set")
 					}
-					if !d.NextArg() {
-						return d.ArgErr()
-					}
 					if d.NextArg() {
 						p.Provider.APIHost = d.Val()
+					}
+					if d.NextArg() {
+						return d.ArgErr()
 					}
 				default:
 					return d.Errf("unrecognized subdirective '%s'", d.Val())
