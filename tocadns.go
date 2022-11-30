@@ -8,7 +8,7 @@ import (
 	godaddy "github.com/tocalabs/tlsdns.godaddy"
 )
 
-// Provider wraps the provider implementation as a Caddy module.
+// Provider lets Caddy read and manipulate DNS records hosted by this DNS provider.
 type Provider struct{ *godaddy.Provider }
 
 func init() {
@@ -23,51 +23,55 @@ func (Provider) CaddyModule() caddy.ModuleInfo {
 	}
 }
 
-// Before using the provider config, resolve placeholders in the API token.
-// Implements caddy.Provisioner.
+// TODO: This is just an example. Useful to allow env variable placeholders; update accordingly.
+// Provision sets up the module. Implements caddy.Provisioner.
 func (p *Provider) Provision(ctx caddy.Context) error {
-	repl := caddy.NewReplacer()
-	p.Provider.APIToken = repl.ReplaceAll(p.Provider.APIToken, "")
-	p.Provider.APIHost = repl.ReplaceAll(p.Provider.APIHost, "")
+	p.Provider.APIToken = caddy.NewReplacer().ReplaceAll(p.Provider.APIToken, "")
+	p.Provider.APIHost = caddy.NewReplacer().ReplaceAll(p.Provider.APIHost, "")
 	return nil
 }
 
+// TODO: This is just an example. Update accordingly.
 // UnmarshalCaddyfile sets up the DNS provider from Caddyfile tokens. Syntax:
 //
-//	tocadns {
-//	    api_token <api_token>
-//		api_host <api_host>
-//	}
+// tocadns [<api_token>] {
+//     api_token <api_token>
+// }
+//
+// **THIS IS JUST AN EXAMPLE AND NEEDS TO BE CUSTOMIZED.**
 func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+	fmt.Printf("Unmarshal for tocadns")
 	for d.Next() {
-		
+		if d.NextArg() {
+			p.Provider.APIToken = d.Val()
+		}
+		if d.NextArg() {
+			return d.ArgErr()
+		}
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
-			fmt.Printf("Nesting block")
 			switch d.Val() {
-				case "api_token":
-					if p.Provider.APIToken != "" {
-						return d.Err("API Token already set")
-					}
-					if d.NextArg() {
-						fmt.Printf("API Token %s", d.Val())
-						p.Provider.APIToken = d.Val()
-					}
-					if d.NextArg() {
-						fmt.Printf("Got to next arg - api_token")
-						return d.ArgErr()
-					}
-				case "api_host":
-					if p.Provider.APIHost != "" {
-						return d.Err("API Host already set")
-					}
-					if d.NextArg() {
-						p.Provider.APIHost = d.Val()
-					}
-					if d.NextArg() {
-						return d.ArgErr()
-					}
-				default:
-					return d.Errf("unrecognized subdirective '%s'", d.Val())
+			case "api_token":
+				if p.Provider.APIToken != "" {
+					return d.Err("API token already set")
+				}
+				if d.NextArg() {
+					p.Provider.APIToken = d.Val()
+				}
+				if d.NextArg() {
+					return d.ArgErr()
+				}
+			case "api_host":
+				if p.Provider.APIHost != "" {
+					return d.Err("API Host already set")
+				}
+				if d.NextArg() {
+					p.Provider.APIHost = d.Val()
+				}
+				if d.NextArg() {
+					return d.ArgErr()
+				}
+			default:
+				return d.Errf("unrecognized subdirective '%s'", d.Val())
 			}
 		}
 	}
