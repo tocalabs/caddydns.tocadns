@@ -54,8 +54,8 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				if p.Provider.APIToken != "" {
 					return d.Err("API token already set")
 				}
-				if d.NextArg() {
-					p.Provider.APIToken = d.Val()
+				if !d.NextArg() {
+					return d.Err("Couldn't go on to next argument")
 				}
 				if d.NextArg() {
 					p.Provider.APIToken = d.Val()
@@ -66,6 +66,9 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			case "api_host":
 				if p.Provider.APIHost != "" {
 					return d.Err("API host already set")
+				}
+				if !d.NextArg() {
+					return d.Err("Couldn't go on to next argument")
 				}
 				if d.NextArg() {
 					p.Provider.APIHost = d.Val()
