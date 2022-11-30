@@ -1,6 +1,8 @@
 package tocadns
 
 import (
+	"fmt"
+
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	godaddy "github.com/tocalabs/tlsdns.godaddy"
@@ -42,15 +44,18 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			return d.ArgErr()
 		}
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
+			fmt.Printf("Nesting block")
 			switch d.Val() {
 				case "api_token":
 					if p.Provider.APIToken != "" {
 						return d.Err("API Token already set")
 					}
 					if d.NextArg() {
+						fmt.Printf("API Token %s", d.Val())
 						p.Provider.APIToken = d.Val()
 					}
 					if d.NextArg() {
+						fmt.Printf("Got to next arg - api_token")
 						return d.ArgErr()
 					}
 				case "api_host":
