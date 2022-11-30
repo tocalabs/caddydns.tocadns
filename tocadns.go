@@ -45,9 +45,6 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 		if d.NextArg() {
 			p.Provider.APIToken = d.Val()
 		}
-		if d.NextArg() {
-			return d.ArgErr()
-		}
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
 			case "api_token":
