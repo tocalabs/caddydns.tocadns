@@ -45,19 +45,21 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
 			case "api_token":
-				if d.NextArg() {
-					p.Provider.APIToken = d.Val()
+				if p.Provider.APIToken != "" {
+					return d.Err("API Token already exists")
 				}
-				if d.NextArg() {
+				if !d.NextArg() {
 					return d.ArgErr()
 				}
+				p.Provider.APIToken = d.Val()
 			case "api_host":
-				if d.NextArg() {
-					p.Provider.APIHost = d.Val()
+				if p.Provider.APIHost != "" {
+					return d.Err("API host already exists")
 				}
-				if d.NextArg() {
+				if !d.NextArg() {
 					return d.ArgErr()
 				}
+				p.Provider.APIHost = d.Val()
 			default:
 				return d.Errf("unrecognized subdirective '%s'", d.Val())
 			}
